@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const band_1 = __importDefault(require("../../models/band"));
 exports.getAllBandsForStyle = (styleId) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("el style es " + styleId);
     let myBands = yield band_1.default.find({ musicStyle: styleId }).select('name').sort({ name: 1 }).exec();
     return {
         bands: myBands

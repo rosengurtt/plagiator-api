@@ -1,31 +1,31 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const uploadController_1 = require("./uploadController");
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
-exports.default = [
+/*
+export default [
     {
-        path: "/api/upload",
+        path: "/api/uploads",
         method: "post",
         handler: [
-            upload.single('musicFile'),
-            (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+            async (req: Request, res: Response, next: any)=>{
+                console.log("empieza el sorete")
+                console.log(req)
+            await upload.single('musicFile');
+            console.log("empieza el sorete")
+            console.log(req)
+            next()
+            },
+            async (req: Request, res: Response) => {
+                console.log("Holaaaaaaaaaaaaaaaaaaaaa ppaaaaaaaaaaaaaaaaaaaai")
                 if (req.file.mimetype !== 'application/zip') {
                     res.status(400).send({ Result: "File is not a zip file" });
                 }
-                const result = yield uploadController_1.postUploadFile(req.file.path);
+                const result = await postUploadFile(req.file.path);
                 res.status(200).send(result);
-            })
+            }
         ]
     }
 ];
+*/ 
 //# sourceMappingURL=routes.js.map

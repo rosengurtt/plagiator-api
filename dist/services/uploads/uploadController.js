@@ -19,25 +19,37 @@ let randomstring = require("randomstring");
 const processUnzippedSongs_1 = require("../../midiUtils/processUnzippedSongs");
 let unzippedSongProcessor = new processUnzippedSongs_1.processUnzippedSongs();
 const fs = require('fs');
-exports.postUploadFile = (filepath) => __awaiter(void 0, void 0, void 0, function* () {
-    var outputFolder = 'uploads/unzipped' + randomstring.generate(7);
-    extract(filepath, { dir: outputFolder }, function (err) {
-        if (err) {
-            console.log('The unzip of ' + filepath + 'failed');
-            console.log(err);
-            return { Result: "The file could not be unzziped" };
+const path = require('path');
+var sendJSONresponse = function (res, status, content) {
+    res.status(status);
+    res.json(content);
+};
+exports.postUploadFile = function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("entre a postUploadFile");
+        if (req.file.mimetype !== 'application/zip') {
+            sendJSONresponse(res, 400, { Result: "File is not a zip file" });
         }
-        else {
-            unzippedSongProcessor.Parse(outputFolder)
-                .then(function (results) {
-                return { Result: "File processed OK" };
-            })
-                .catch(function (err) {
-                console.log("Error processing unzipped file.");
+        var outputFolder = 'uploads/unzipped' + randomstring.generate(7);
+        extract(req.file.path, { dir: path.resolve(outputFolder) }, function (err) {
+            if (err) {
+                console.log('The unzip of ' + req.file.originalname + 'failed');
                 console.log(err);
-                return { Result: err.message };
-            });
-        }
+                sendJSONresponse(res, 400, { Result: "The file could not be unzziped" });
+            }
+            else {
+                console.log(req.file.originalname + 'unzipped OK');
+                unzippedSongProcessor.Parse(outputFolder)
+                    .then(function (results) {
+                    sendJSONresponse(res, 200, { Result: "File processed OK" });
+                })
+                    .catch(function (err) {
+                    console.log("Error processing unzipped file.");
+                    console.log(err);
+                    sendJSONresponse(res, 400, { Result: err.message });
+                });
+            }
+        });
     });
-});
+};
 //# sourceMappingURL=uploadController.js.map
